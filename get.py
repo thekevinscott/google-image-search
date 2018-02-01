@@ -1,11 +1,14 @@
 import os
 import json
 import requests
+import urllib3
 import sys
 import urllib
 import shutil
+from tqdm import tqdm
 from PIL import Image
 from pprint import pprint
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # https://gist.github.com/dideler/2395703
 """Collect command-line options in a dictionary"""
@@ -36,8 +39,9 @@ key = myargs['-k']
 cx = myargs['-c']
 q = myargs['-q']
 pages = myargs['-p'] if '-p' in myargs else 10
-fileType = myargs['-f'] if '-f' in myargs else 'jpg'
+ext = myargs['-e'] if '-e' in myargs else 'jpg'
 out = myargs['-out'] if '-out' in myargs else 'images'
+fileName = myargs['-f'] if '-f' in myargs else q
 
 # Set up .cache directory
 # Google limits requests to 100 a day for the free tier,
@@ -73,27 +77,30 @@ def getData(q, offset, fileType):
     return data
 
 def getListOfImagesFromData(data):
-    return [i['link'] for i in data['items']]
+    if 'items' in data:
+        return [i['link'] for i in data['items']]
 
-def getListOfImagesFromAPI(q, fileType, page=0):
-    data = getData(q, page, fileType)
+    return []
+
+def getListOfImagesFromAPI(q, ext, page=0):
+    data = getData(q, page, ext)
     return getListOfImagesFromData(data)
 
-def getImagesURLs(q, fileType, pages):
+def getImagesURLs(q, ext, pages):
     images = []
 
     for i in range(int(pages)):
-        images = images + getListOfImagesFromAPI(q, fileType, i)
+        images = images + getListOfImagesFromAPI(q, ext, i)
 
     return images
 
-def saveImageURLs(urls, query, fileType):
-    for index in range(len(urls)):
+def saveImageURLs(urls, query, ext):
+    for index in tqdm(range(len(urls))):
         path = "{query}.{index}".format(query=query, index=index + 1)
-        saveImageURL(path, urls[index], fileType)
+        saveImageURL(path, urls[index], ext)
 
 def saveImageURL(path, url, ext):
-    response = requests.get(url, stream=True)
+    response = requests.get(url, stream=True, verify=False)
 
     if response.status_code == 200:
         file = "{out}/{path}.{ext}".format(ext=ext, path=path, out=out)
@@ -101,9 +108,14 @@ def saveImageURL(path, url, ext):
             shutil.copyfileobj(response.raw, out_file)
         del response
 
-def getImages(q, fileType, pages):
-    urls = getImagesURLs(q, fileType, pages)
-    saveImageURLs(urls, q, fileType)
+def getImages(query, ext, fileName, pages):
+    queries = query.split(",")
+    urls = list()
+
+    for q in queries:
+        urls.extend(getImagesURLs(q, ext, pages))
+
+    saveImageURLs(urls, fileName, ext)
     return urls
 
-getImages(q, fileType, pages)
+getImages(q, ext, fileName, pages)
