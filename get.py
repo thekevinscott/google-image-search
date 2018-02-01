@@ -43,8 +43,6 @@ ext = myargs['-e'] if '-e' in myargs else 'jpg'
 out = myargs['-out'] if '-out' in myargs else 'images'
 fileName = myargs['-f'] if '-f' in myargs else q
 
-pprint(q)
-
 # Set up .cache directory
 # Google limits requests to 100 a day for the free tier,
 # so we should cache any json responses we get so as not
