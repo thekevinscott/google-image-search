@@ -5,7 +5,7 @@ This is a quick and dirty python script to fetch images from Google's search API
 ## Usage
 
 ```
-python get.py -k %20AIzaSyCFGCpvDBLANnjcqtrFaiwHOWLewGJpmaA -c 005373242316179056418:k5sdxhqcp9c -q dolphin -p 2
+python get.py -k YOUR_KEY -c YOUR_SEARCH_ENGINE -q YOUR_QUERY -p NUMBER_OF_PAGES
 ```
 
 For more information on setting up a key and cx, read this [Stack Overflow post](https://stackoverflow.com/questions/34035422/google-image-search-says-api-no-longer-available).
