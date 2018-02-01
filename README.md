@@ -14,6 +14,7 @@ For more information on setting up a key and cx, read this [Stack Overflow post]
 * `-c` - Your custom search engine.
 * `-q` - The query to search for
 * `-p` - (optional) Number of pages to fetch
+* `-f` - (optional) extension to use. Default is `.jpg`
 
 ## Caching
 
