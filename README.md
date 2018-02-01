@@ -2,6 +2,8 @@
 
 This is a quick and dirty python script to fetch images from Google's search API and save them.
 
+Google limits results to only the first 100 from a search, so keep that in mind when querying for images.
+
 ## Usage
 
 ```
@@ -19,4 +21,4 @@ For more information on setting up a key and cx, read this [Stack Overflow post]
 
 ## Caching
 
-Because Google limits requests to a 100 per day, this script aggressively caches responses from Google's API. All requests are saved as JSON files in the .cache/ directory.
+Because Google limits requests, this script aggressively caches responses from Google's API. All requests are saved as JSON files in the .cache/ directory.
