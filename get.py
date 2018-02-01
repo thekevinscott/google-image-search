@@ -37,6 +37,7 @@ cx = myargs['-c']
 q = myargs['-q']
 pages = myargs['-p'] if '-p' in myargs else 10
 fileType = myargs['-f'] if '-f' in myargs else 'jpg'
+out = myargs['-out'] if '-out' in myargs else 'images'
 
 # Set up .cache directory
 # Google limits requests to 100 a day for the free tier,
@@ -48,7 +49,7 @@ def makeDirectoryIfNotExisting(dir):
         os.makedirs(dir)
 
 makeDirectoryIfNotExisting('.cache')
-makeDirectoryIfNotExisting('images')
+makeDirectoryIfNotExisting(out)
 
 def makeAPIRequest(q, page, fileType, imgSize='medium'):
     # Defaults to 10 results per page
@@ -93,10 +94,12 @@ def saveImageURLs(urls, query, fileType):
 
 def saveImageURL(path, url, ext):
     response = requests.get(url, stream=True)
-    file = "images/{path}.{ext}".format(ext=ext, path=path)
-    with open(file, 'wb') as out_file:
-        shutil.copyfileobj(response.raw, out_file)
-    del response
+
+    if response.status_code == 200:
+        file = "{out}/{path}.{ext}".format(ext=ext, path=path, out=out)
+        with open(file, 'wb') as out_file:
+            shutil.copyfileobj(response.raw, out_file)
+        del response
 
 def getImages(q, fileType, pages):
     urls = getImagesURLs(q, fileType, pages)

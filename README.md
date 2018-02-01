@@ -15,6 +15,7 @@ For more information on setting up a key and cx, read this [Stack Overflow post]
 * `-q` - The query to search for
 * `-p` - (optional) Number of pages to fetch
 * `-f` - (optional) extension to use. Default is `.jpg`
+* `-out` - (optional) The directory where images are saved. Defaults to `/images`
 
 ## Caching
 
