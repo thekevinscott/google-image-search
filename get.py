@@ -37,11 +37,13 @@ root = 'https://www.googleapis.com/customsearch/v1'
 
 key = myargs['-k']
 cx = myargs['-c']
-q = myargs['-q']
+q = (myargs['-q']).split(' ')
 pages = myargs['-p'] if '-p' in myargs else 10
 ext = myargs['-e'] if '-e' in myargs else 'jpg'
 out = myargs['-out'] if '-out' in myargs else 'images'
 fileName = myargs['-f'] if '-f' in myargs else q
+
+pprint(q)
 
 # Set up .cache directory
 # Google limits requests to 100 a day for the free tier,
@@ -108,10 +110,8 @@ def saveImageURL(path, url, ext):
             shutil.copyfileobj(response.raw, out_file)
         del response
 
-def getImages(query, ext, fileName, pages):
-    queries = query.split(",")
+def getImages(queries, ext, fileName, pages):
     urls = list()
-
     for q in queries:
         urls.extend(getImagesURLs(q, ext, pages))
 

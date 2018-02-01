@@ -13,14 +13,14 @@ python get.py -k YOUR_KEY -c YOUR_SEARCH_ENGINE -q YOUR_QUERY -p NUMBER_OF_PAGES
 Or for multiple queries:
 
 ```
-python get.py -k YOUR_KEY -c YOUR_SEARCH_ENGINE -q query1,query2,query3 -p NUMBER_OF_PAGES
+python get.py -k YOUR_KEY -c YOUR_SEARCH_ENGINE -q "query1 query2 query3" -p NUMBER_OF_PAGES
 ```
 
 For more information on setting up a key and cx, read this [Stack Overflow post](https://stackoverflow.com/questions/34035422/google-image-search-says-api-no-longer-available).
 
 * `-k` - Your key.
 * `-c` - Your custom search engine.
-* `-q` - The query to search for. Specify multiple queries to search for by separating them with commas.
+* `-q` - The query to search for. Specify multiple queries to search for by separating them with spaces.
 * `-p` - (optional) Number of pages to fetch.
 * `-e` - (optional) extension to use. Default is `.jpg`.
 * `-out` - (optional) The directory where images are saved. Defaults to `/images`.
