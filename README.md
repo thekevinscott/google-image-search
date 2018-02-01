@@ -28,4 +28,4 @@ For more information on setting up a key and cx, read this [Stack Overflow post]
 
 ## Caching
 
-Because Google limits requests, this script aggressively caches responses from Google's API. All requests are saved as JSON files in the .cache/ directory.
+Because [Google limits requests to 100 search queries per day for free](https://developers.google.com/custom-search/json-api/v1/overview?hl=en_US#pricing), this script aggressively caches responses from Google's API. All requests are saved as JSON files in the .cache/ directory.
