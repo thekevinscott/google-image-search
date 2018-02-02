@@ -67,14 +67,28 @@ def getData(q, offset, fileType):
     path = ".cache/{q}-{offset}.json".format(q=q, offset=offset)
     if os.path.exists(path):
         data = json.load(open(path))
-        return data
+        if 'items' in data:
+            pprint("fine")
+            return data
+
+        pprint("not fine")
 
     data = makeAPIRequest(q, offset, fileType)
 
-    with open(path, 'w') as outfile:
-        json.dump(data, outfile)
+    if 'items' in data:
+        with open(path, 'w') as outfile:
+            json.dump(data, outfile)
 
-    return data
+        return data
+
+    if 'error' in data:
+        pprint(q)
+        pprint(offset)
+        pprint(data['error'])
+        return data
+
+    pprint("You have probably reached the max number of requests")
+    pprint(data)
 
 def getListOfImagesFromData(data):
     if 'items' in data:
@@ -84,13 +98,20 @@ def getListOfImagesFromData(data):
 
 def getListOfImagesFromAPI(q, ext, page=0):
     data = getData(q, page, ext)
-    return getListOfImagesFromData(data)
+    if 'error' not in data:
+        return getListOfImagesFromData(data)
+
+    return data
 
 def getImagesURLs(q, ext, pages):
     images = []
 
     for i in range(int(pages)):
-        images = images + getListOfImagesFromAPI(q, ext, i)
+        newImages = getListOfImagesFromAPI(q, ext, i)
+        if 'error' in newImages:
+            break
+
+        images = images + newImages
 
     return images
 
