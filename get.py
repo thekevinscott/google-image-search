@@ -114,12 +114,22 @@ def getImagesURLs(q, ext, pages):
     return images
 
 def saveImageURLs(urls, query, ext):
+    invalidImages = list()
+
     for index in tqdm(range(len(urls))):
         path = "{query}.{index}".format(query=query, index=index + 1)
-        saveImageURL(path, urls[index], ext)
+        isValid = saveImageURL(path, urls[index], ext)
+        if isValid is False:
+            invalidImages.extend(path)
+
+    if len(invalidImages) > 0:
+        pprint("The following images were found to be invalid:")
+        for file in invalidImages:
+            pprint("{file}".format(file=file))
 
 def saveImageURL(path, url, ext):
     response = requests.get(url, stream=True, verify=False)
+    isValid = True
 
     if response.status_code == 200:
         file = "{out}/{path}.{ext}".format(ext=ext, path=path, out=out)
@@ -127,10 +137,11 @@ def saveImageURL(path, url, ext):
             shutil.copyfileobj(response.raw, out_file)
 
         if isInvalidImage(file):
-            pprint("{file} is an invalid image".format(file=file))
+            isValid = False
             os.remove(file)
 
     del response
+    return isValid
 
 def isInvalidImage(path):
     try:
