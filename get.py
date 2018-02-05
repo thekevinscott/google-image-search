@@ -3,6 +3,7 @@ import json
 import requests
 import urllib3
 import sys
+import cv2
 import urllib
 import shutil
 from tqdm import tqdm
@@ -68,10 +69,7 @@ def getData(q, offset, fileType):
     if os.path.exists(path):
         data = json.load(open(path))
         if 'items' in data:
-            pprint("fine")
             return data
-
-        pprint("not fine")
 
     data = makeAPIRequest(q, offset, fileType)
 
@@ -127,7 +125,23 @@ def saveImageURL(path, url, ext):
         file = "{out}/{path}.{ext}".format(ext=ext, path=path, out=out)
         with open(file, 'wb') as out_file:
             shutil.copyfileobj(response.raw, out_file)
-        del response
+
+        if isInvalidImage(file):
+            pprint("{file} is an invalid image".format(file=file))
+            os.remove(file)
+
+    del response
+
+def isInvalidImage(path):
+    try:
+        image = cv2.imread(path)
+        if image is None:
+            return True
+
+    except:
+        return True
+
+    return False
 
 def getImages(queries, ext, fileName, pages):
     urls = list()
